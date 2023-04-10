@@ -33,6 +33,20 @@ app.get("/products/:id", (req, res) => {
   }
 });
 
+app.get("/users/:username", (req, res) => {
+  if (req.params.username == "ALL") {
+    client.query(`SELECT * FROM customer;`).then((result) => {
+      res.send(result.rows);
+    });
+  } else {
+    client
+      .query(`SELECT * FROM customer WHERE username=$1`, [req.params.username])
+      .then((result) => {
+        res.send(result.rows);
+      });
+  }
+});
+
 app.listen(port, url, () => {
   console.log(`backend listening on port ${port} at ${url}`);
 });
