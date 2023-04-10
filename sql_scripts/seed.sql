@@ -21,4 +21,4 @@ INSERT INTO customer_product (user_id, product_id, quantity)
 VALUES
 ('richard0123', 1, 1),
 ('richard0123', 3, 1),
-('richard0123', 1, 8);
+('richard0123', 2, 8);

@@ -47,6 +47,41 @@ app.get("/users/:username", (req, res) => {
   }
 });
 
+app.get("/cart/:user", (req, res) => {
+  if (req.params.user == "ALL") {
+    client.query(`SELECT * FROM customer_product`).then((result) => {
+      res.send(result.rows);
+    });
+  } else {
+    client
+      .query(`SELECT * FROM customer_product WHERE user_id=$1`, [
+        req.params.user,
+      ])
+      .then((result) => {
+        res.send(result.rows);
+      });
+  }
+});
+
+// when client adds or removes a quantity from their cart
+app.patch("/cart/:customer/:add/:product", (req, res) => {
+  let adder = "";
+  if (req.params.add == "ADD") {
+    adder += "+1";
+  } else {
+    adder += "-1";
+  }
+  client
+    .query(
+      `UPDATE customer_product SET
+  quantity=quantity${adder} WHERE user_id=$1 AND product_id=$2 RETURNING *`,
+      [req.params.customer, req.params.product]
+    )
+    .then((response) => {
+      res.send("updated");
+    });
+});
+
 app.listen(port, url, () => {
   console.log(`backend listening on port ${port} at ${url}`);
 });
