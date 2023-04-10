@@ -12,6 +12,14 @@ app.get("/", (req, res) => {
   res.sendFile(`${pathToFile}/index.html`);
 });
 
+app.get("/index", (req, res) => {
+  res.sendFile(`${pathToFile}/index.js`);
+});
+
+app.get("/styles", (req, res) => {
+  res.sendFile(`${pathToFile}/styles.css`);
+});
+
 app.listen(port, url, () => {
   console.log(`front end running on port ${port} at ${url}`);
 });
