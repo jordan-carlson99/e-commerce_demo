@@ -8,8 +8,7 @@
     <link rel="stylesheet" href="/styles" />
     <title>agora</title>
   </head>
-  <div id="sign-in-container" class="container">
-    <!-- <form method="get" action="http://127.0.0.15:3500/login" id="sign-in-form"> -->
+  <div id="sign-in-container" class="container hidden">
     <form id="sign-in-form">
       <h3>UserName:</h3>
       <input name="userName" type="text" /> <br />
@@ -20,7 +19,6 @@
   </div>
   <body onload="pageLoad()">
     <div id="cart">
-      <!-- <div id="cart-header" class="column">top left</div> -->
       <header id="cart-panel">Cart</header>
       <div id="cart-body" class="main"></div>
     </div>
@@ -29,7 +27,7 @@
       <header id="user-panel">
         Welcome, guest
 
-        <br /><button>sign in</button>
+        <br /><button onclick="signInPopUp()">sign in</button>
       </header>
       <div id="card-display-body" class="main"></div>
     </div>

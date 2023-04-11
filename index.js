@@ -180,19 +180,18 @@ async function submitSignIn() {
     document.getElementById(
       "user-panel"
     ).innerText = `Welcome, ${data[0].username}`;
-    pageUser.userName = data[0].userName;
+    pageUser.userName = data[0].username;
     pageUser.password = data[0].password;
-    console.log(data[0]);
+    document.getElementById("cart-body").innerHTML = "";
+    let shoppingCard = await getCart(pageUser.userName);
+    shoppingCard.forEach((element) => {
+      generateCartCard(element);
+    });
   } else {
     return;
   }
-  console.log("submitted");
 }
-// async function signIn(form) {
-//   // console.log(form[0].value);
-//   fetch(
-//     `${apiURL}/login?userName=${form[0].value}&password=${form[1].value}`
-//   ).then(async (response) => {
-//     console.log(response);
-//   });
-// }
+
+function signInPopUp() {
+  document.getElementById("sign-in-container").classList.toggle("hidden");
+}
