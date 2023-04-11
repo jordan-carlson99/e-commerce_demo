@@ -31,10 +31,62 @@ function generateMainCard(item) {
 function generateCartCard(item) {
   let card = document.createElement("div");
   card.className = "cart-card";
-  card.id = itme.id;
+  card.id = item.id;
   card.innerHTML = `
   <h3>${item.product_name}</h3>
-  <h4>${item.price}</h4>`;
+  <h4 id="${item.id}-quantity">${item.quantity}</h4>
+  <h4 id="${item.id}-price">${parseFloat(item.price) * item.quantity}</h4>`;
+  let quantityUp = document.createElement("button");
+  quantityUp.innerText = "+";
+  quantityUp.addEventListener("click", async (e) => {
+    let response = await fetch(
+      `${apiURL}/cart/${pageUser.userName}/ADD/${e.target.parentNode.id}`,
+      {
+        method: "PATCH",
+      }
+    );
+    if (response.ok) {
+      let data = await response.json();
+      document.getElementById(
+        `${e.target.parentNode.id}-quantity`
+      ).innerText = `${data[0].quantity}`;
+      document.getElementById(`${e.target.parentNode.id}-price`).innerText = `
+      ${(
+        parseFloat(
+          document.getElementById(`${e.target.parentNode.id}-price`).innerText /
+            (data[0].quantity - 1)
+        ) * data[0].quantity
+      ).toFixed(2)}`;
+    }
+  });
+  let quantityDown = document.createElement("button");
+  quantityDown.innerText = "-";
+  quantityDown.addEventListener("click", async (e) => {
+    let response = await fetch(
+      `${apiURL}/cart/${pageUser.userName}/sub/${e.target.parentNode.id}`,
+      {
+        method: "PATCH",
+      }
+    );
+    if (response.ok) {
+      let data = await response.json();
+      document.getElementById(
+        `${e.target.parentNode.id}-quantity`
+      ).innerText = `${data[0].quantity}`;
+      document.getElementById(`${e.target.parentNode.id}-price`).innerText = `
+        ${(
+          parseFloat(
+            document.getElementById(`${e.target.parentNode.id}-price`)
+              .innerText /
+              (data[0].quantity + 1)
+          ) * data[0].quantity
+        ).toFixed(2)}`;
+    }
+  });
+  let removeCart = document.createElement("button");
+  card.appendChild(quantityUp);
+  card.appendChild(quantityDown);
+  document.getElementById("cart-body").appendChild(card);
 }
 
 /*
@@ -49,15 +101,25 @@ bean time with da peanut butter sauce
 */
 
 async function pageLoad() {
-  let data = await getProduct();
-  data.forEach((element) => {
+  let mainCard = await getProduct();
+  let shoppingCard = await getCart(pageUser.userName);
+  mainCard.forEach((element) => {
     generateMainCard(element);
+  });
+  console.log(shoppingCard);
+  shoppingCard.forEach((element) => {
+    generateCartCard(element);
   });
 }
 
 async function getProduct(id) {
   id = id || "ALL";
   return (await fetch(`${apiURL}/products/ALL`)).json();
+}
+
+async function getCart(user_id) {
+  user_id = user_id || "guest";
+  return (await fetch(`${apiURL}/cart/${user_id}`)).json();
 }
 
 async function addToCart(element) {

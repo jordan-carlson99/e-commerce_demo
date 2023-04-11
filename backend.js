@@ -54,9 +54,11 @@ app.get("/cart/:user", (req, res) => {
     });
   } else {
     client
-      .query(`SELECT * FROM customer_product WHERE user_id=$1`, [
-        req.params.user,
-      ])
+      .query(
+        `SELECT customer_product.quantity, product.price, product.product_name, product.id FROM customer_product 
+        INNER JOIN product ON customer_product.user_id=$1 AND product.id=customer_product.product_id`,
+        [req.params.user]
+      )
       .then((result) => {
         res.send(result.rows);
       });
@@ -78,7 +80,7 @@ app.patch("/cart/:customer/:add/:product", async (req, res, next) => {
   );
   let data = await response.rows[0].quantity;
   if (data > 0) {
-    res.send("Modified");
+    res.send(response.rows);
   } else {
     // add in handler in app.js for sending a delete when it recieves this
     res.send(["DELETE", req.params.customer, req.params.product]);
