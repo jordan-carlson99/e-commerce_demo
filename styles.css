@@ -1,3 +1,48 @@
-h1 {
-  color: red;
+body {
+  height: 100%;
+  margin: 0%;
+  display: flex;
+}
+header {
+  flex-shrink: 0;
+  display: flex;
+  border: 1px solid green;
+}
+.column {
+  height: 100%; /* allows both columns to span the full height of the browser window */
+  display: flex;
+  flex-direction: column; /* stacks the left and right headers above the bottom content */
+}
+.main {
+  flex-grow: 1;
+  overflow-y: auto;
+  justify-content: space-around;
+}
+.card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  border: 1px solid black;
+  width: 23%;
+  margin: 5%;
+}
+#cart {
+  flex-shrink: 0;
+  height: 100vh;
+  flex-basis: 15vw;
+  border: 1px solid blue;
+}
+#card-display {
+  height: 100vh;
+  flex-basis: 85vw;
+  border: 1px solid red;
+}
+#card-display-body {
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.card-button {
+  margin-top: auto;
 }
