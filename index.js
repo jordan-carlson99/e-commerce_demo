@@ -28,6 +28,26 @@ function generateMainCard(item) {
   return card;
 }
 
+function generateCartCard(item) {
+  let card = document.createElement("div");
+  card.className = "cart-card";
+  card.id = itme.id;
+  card.innerHTML = `
+  <h3>${item.product_name}</h3>
+  <h4>${item.price}</h4>`;
+}
+
+/*
+bean time with da peanut butter sauce 
+        <div class="cart-card">
+          <h3>title</h3>
+          <h4>price</h4>
+          <button>quantity+</button>
+          <button>quantity-</button>
+          <button>remove from cart</button>
+        </div>
+*/
+
 async function pageLoad() {
   let data = await getProduct();
   data.forEach((element) => {

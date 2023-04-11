@@ -46,3 +46,10 @@ header {
 .card-button {
   margin-top: auto;
 }
+.cart-card {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  padding: 3%;
+  border: 1px solid black;
+}
