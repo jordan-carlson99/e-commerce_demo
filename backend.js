@@ -81,15 +81,40 @@ app.patch("/cart/:customer/:add/:product", async (req, res, next) => {
     res.send("Modified");
   } else {
     // add in handler in app.js for sending a delete when it recieves this
-    res.send("DELETE");
+    res.send(["DELETE", req.params.customer, req.params.product]);
   }
 });
 
+// customer removes item from cart
 app.delete("/cart/remove/:customer/:product", (req, res) => {
-  res.send("gucci");
+  client
+    .query(`DELETE FROM customer_product WHERE user_id=$1 AND product_id=$2;`, [
+      req.params.customer,
+      req.params.product,
+    ])
+    .then(res.send("sucess"));
 });
 
-app.delete("/cart/:customer/:product", (req, res) => {});
+// customer adds new item to cart
+app.post("/newCart/:customer/:product", async (req, res) => {
+  let data = await client.query(
+    `SELECT * FROM customer_product WHERE $1=user_id AND $2=product_id`,
+    [req.params.customer, req.params.product]
+  );
+  if (data.rowCount < 1) {
+    client
+      .query(
+        `INSERT INTO customer_product (user_id,product_id,quantity)
+    VALUES ($1,$2,1) RETURNING *`,
+        [req.params.customer, req.params.product]
+      )
+      .then((result) => {
+        res.send(result.rows);
+      });
+  } else {
+    res.send(["PATCH", req.params.customer, req.params.product]);
+  }
+});
 
 app.listen(port, url, () => {
   console.log(`backend listening on port ${port} at ${url}`);
