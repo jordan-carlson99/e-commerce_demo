@@ -2,11 +2,14 @@ import express from "express";
 const app = express();
 import path from "path";
 import dotenv from "dotenv";
+import cors from "cors";
 
 let pathToFile = path.resolve("./");
 dotenv.config();
 const port = process.env.frontPort || 3000;
 const url = process.env.frontURL || "127.0.0.1";
+
+app.use(cors());
 
 app.get("/", (req, res) => {
   res.sendFile(`${pathToFile}/index.html`);

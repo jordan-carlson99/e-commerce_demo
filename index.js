@@ -1,5 +1,11 @@
 // change this to env variables when modules aren't maddening
 const apiURL = `http://127.0.0.15:3500`;
+const pageUser = {
+  userName: "guest",
+  full_name: "guest",
+  email: "guest@email.com",
+  password: "",
+};
 
 function generateMainCard(item) {
   let card = document.createElement("div");
@@ -10,8 +16,8 @@ function generateMainCard(item) {
   button.className = "card-button";
   button.innerText = "add to cart";
   button.addEventListener("click", (e) => {
-    // addToCart(e.target.parentNode)
-    console.log(e.target.parentNode);
+    addToCart(e.target.parentNode);
+    // console.log(e.target.parentNode);
   });
   card.innerHTML = `
     <h2 class="card-title">${item.product_name}</h2><br>
@@ -33,12 +39,19 @@ async function getProduct(id) {
   id = id || "ALL";
   return (await fetch(`${apiURL}/products/ALL`)).json();
 }
-/*
-      <div id="card-display-body" class="main">
-        <div class="card">
-          <h2>product name</h2>
-          <h3>price</h3>
-          <img src="" alt="" />picture
-          <button>add to cart</button>
-        </div>
-*/
+
+async function addToCart(element) {
+  let id = element.id;
+  let user = pageUser.userName;
+  let response = await fetch(`${apiURL}/newCart/${user}/${id}`, {
+    method: "POST",
+  });
+  let data = await response.json();
+  if (data[0] == "PATCH") {
+    response = await fetch(`${apiURL}/cart/${user}/ADD/${id}`, {
+      method: "PATCH",
+    });
+  } else {
+    //card
+  }
+}
