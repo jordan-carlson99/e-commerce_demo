@@ -9,7 +9,6 @@ const connectionString =
   process.env.connectionString ||
   "postgres://username:password@host:port/database";
 const port = process.env.backPort || "127.0.0.1";
-console.log(port);
 const url = process.env.backURL || 3500;
 const client = new Client(connectionString);
 
@@ -116,6 +115,26 @@ app.post("/newCart/:customer/:product", async (req, res) => {
   } else {
     res.status(303).send(["PATCH", req.params.customer, req.params.product]);
   }
+});
+
+app.get("/login", async (req, res) => {
+  console.log(req.query);
+  client
+    .query(
+      `SELECT username, password FROM customer WHERE username=$1 AND password=$2`,
+      [req.query.userName, req.query.password]
+    )
+    .then((result) => {
+      if (result.rowCount < 1) {
+        console.log("bad");
+        res.url;
+        res.status(401).send(result);
+      } else {
+        res.send(result.rows);
+      }
+    });
+  // let data = await response.rows[0];
+  // res.redirect(`http://${process.env.frontURL}:${process.env.frontPort}/`);
 });
 
 app.listen(port, url, () => {

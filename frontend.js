@@ -23,6 +23,15 @@ app.get("/styles", (req, res) => {
   res.sendFile(`${pathToFile}/styles.css`);
 });
 
+// app.get("/login", (req, res, next) => {
+//   console.log(req.query);
+//   next();
+// });
+
+// app.use("*", (req, res) => {
+//   res.sendFile(`${pathToFile}/index.html`);
+// });
+
 app.listen(port, url, () => {
   console.log(`front end running on port ${port} at ${url}`);
 });

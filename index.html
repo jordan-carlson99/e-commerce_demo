@@ -8,7 +8,16 @@
     <link rel="stylesheet" href="/styles" />
     <title>agora</title>
   </head>
-  <div id="sign-in-container"></div>
+  <div id="sign-in-container" class="container">
+    <!-- <form method="get" action="http://127.0.0.15:3500/login" id="sign-in-form"> -->
+    <form id="sign-in-form">
+      <h3>UserName:</h3>
+      <input name="userName" type="text" /> <br />
+      <h3>Password:</h3>
+      <input name="password" type="password" /> <br />
+      <button type="submit" id="submit">submit</button>
+    </form>
+  </div>
   <body onload="pageLoad()">
     <div id="cart">
       <!-- <div id="cart-header" class="column">top left</div> -->

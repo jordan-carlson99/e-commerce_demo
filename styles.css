@@ -60,5 +60,16 @@ header {
   align-items: flex-end;
   padding-right: 8%;
 }
-#cart-panel {
+#sign-in-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 1px solid black;
+  z-index: 9;
+  position: absolute;
+  top: 25%;
+  left: 50%;
+}
+.hidden {
+  visibility: hidden;
 }

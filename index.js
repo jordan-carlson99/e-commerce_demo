@@ -1,6 +1,6 @@
 // change this to env variables when modules aren't maddening
 const apiURL = `http://127.0.0.15:3500`;
-const pageUser = localStorage.getItem("pageUser") || {
+let pageUser = localStorage.getItem("pageUser") || {
   userName: "guest",
   full_name: "guest",
   email: "guest@email.com",
@@ -123,6 +123,12 @@ async function pageLoad() {
   shoppingCard.forEach((element) => {
     generateCartCard(element);
   });
+  document
+    .getElementById("sign-in-form")
+    .addEventListener("submit", async (e) => {
+      e.preventDefault();
+      submitSignIn(e.target.parentNode);
+    });
 }
 
 async function getProduct(id) {
@@ -161,3 +167,32 @@ async function addToCart(element) {
     //card
   }
 }
+async function submitSignIn() {
+  let formData = new FormData(document.getElementById("sign-in-form"));
+  let response = await fetch(
+    `${apiURL}/login?userName=${formData.get(
+      "userName"
+    )}&password=${formData.get("password")}`
+  );
+  if (response.ok) {
+    let data = await response.json();
+    document.getElementById("sign-in-container").classList.toggle("hidden");
+    document.getElementById(
+      "user-panel"
+    ).innerText = `Welcome, ${data[0].username}`;
+    pageUser.userName = data[0].userName;
+    pageUser.password = data[0].password;
+    console.log(data[0]);
+  } else {
+    return;
+  }
+  console.log("submitted");
+}
+// async function signIn(form) {
+//   // console.log(form[0].value);
+//   fetch(
+//     `${apiURL}/login?userName=${form[0].value}&password=${form[1].value}`
+//   ).then(async (response) => {
+//     console.log(response);
+//   });
+// }
