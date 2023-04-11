@@ -1,6 +1,6 @@
 // change this to env variables when modules aren't maddening
 const apiURL = `http://127.0.0.15:3500`;
-const pageUser = {
+const pageUser = localStorage.getItem("pageUser") || {
   userName: "guest",
   full_name: "guest",
   email: "guest@email.com",
@@ -16,6 +16,7 @@ function generateMainCard(item) {
   button.className = "card-button";
   button.innerText = "add to cart";
   button.addEventListener("click", (e) => {
+    console.log(e.target.parentNode);
     addToCart(e.target.parentNode);
     // console.log(e.target.parentNode);
   });
@@ -31,7 +32,7 @@ function generateMainCard(item) {
 function generateCartCard(item) {
   let card = document.createElement("div");
   card.className = "cart-card";
-  card.id = item.id;
+  card.id = `cart-${item.id}`;
   card.innerHTML = `
   <h3>${item.product_name}</h3>
   <h4 id="${item.id}-quantity">${item.quantity}</h4>
@@ -39,8 +40,9 @@ function generateCartCard(item) {
   let quantityUp = document.createElement("button");
   quantityUp.innerText = "+";
   quantityUp.addEventListener("click", async (e) => {
+    let cardID = item.id;
     let response = await fetch(
-      `${apiURL}/cart/${pageUser.userName}/ADD/${e.target.parentNode.id}`,
+      `${apiURL}/cart/${pageUser.userName}/ADD/${cardID}`,
       {
         method: "PATCH",
       }
@@ -48,22 +50,33 @@ function generateCartCard(item) {
     if (response.ok) {
       let data = await response.json();
       document.getElementById(
-        `${e.target.parentNode.id}-quantity`
+        `${cardID}-quantity`
       ).innerText = `${data[0].quantity}`;
-      document.getElementById(`${e.target.parentNode.id}-price`).innerText = `
+      document.getElementById(`${cardID}-price`).innerText = `
       ${(
         parseFloat(
-          document.getElementById(`${e.target.parentNode.id}-price`).innerText /
+          document.getElementById(`${cardID}-price`).innerText /
             (data[0].quantity - 1)
         ) * data[0].quantity
       ).toFixed(2)}`;
+    } else {
+      console.log("redirect");
+      let redirect = await response.json();
+      console.log(redirect);
+      fetch(`${apiURL}/cart/remove/${redirect[1]}/${redirect[2]}`, {
+        method: redirect[0],
+      });
+      e.target.parentNode.parentNode.removeChild(
+        document.getElementById(`${redirect[2]}`)
+      );
     }
   });
   let quantityDown = document.createElement("button");
   quantityDown.innerText = "-";
   quantityDown.addEventListener("click", async (e) => {
+    let cardID = item.id;
     let response = await fetch(
-      `${apiURL}/cart/${pageUser.userName}/sub/${e.target.parentNode.id}`,
+      `${apiURL}/cart/${pageUser.userName}/sub/${cardID}`,
       {
         method: "PATCH",
       }
@@ -71,19 +84,27 @@ function generateCartCard(item) {
     if (response.ok) {
       let data = await response.json();
       document.getElementById(
-        `${e.target.parentNode.id}-quantity`
+        `${cardID}-quantity`
       ).innerText = `${data[0].quantity}`;
-      document.getElementById(`${e.target.parentNode.id}-price`).innerText = `
+      document.getElementById(`${cardID}-price`).innerText = `
         ${(
           parseFloat(
-            document.getElementById(`${e.target.parentNode.id}-price`)
-              .innerText /
+            document.getElementById(`${cardID}-price`).innerText /
               (data[0].quantity + 1)
           ) * data[0].quantity
         ).toFixed(2)}`;
+    } else {
+      console.log("redirect");
+      let redirect = await response.json();
+      console.log(redirect);
+      fetch(`${apiURL}/cart/remove/${redirect[1]}/${redirect[2]}`, {
+        method: redirect[0],
+      });
+      e.target.parentNode.parentNode.removeChild(
+        document.getElementById(`cart-${redirect[2]}`)
+      );
     }
   });
-  let removeCart = document.createElement("button");
   card.appendChild(quantityUp);
   card.appendChild(quantityDown);
   document.getElementById("cart-body").appendChild(card);
@@ -91,13 +112,6 @@ function generateCartCard(item) {
 
 /*
 bean time with da peanut butter sauce 
-        <div class="cart-card">
-          <h3>title</h3>
-          <h4>price</h4>
-          <button>quantity+</button>
-          <button>quantity-</button>
-          <button>remove from cart</button>
-        </div>
 */
 
 async function pageLoad() {
@@ -106,7 +120,6 @@ async function pageLoad() {
   mainCard.forEach((element) => {
     generateMainCard(element);
   });
-  console.log(shoppingCard);
   shoppingCard.forEach((element) => {
     generateCartCard(element);
   });
@@ -129,11 +142,22 @@ async function addToCart(element) {
     method: "POST",
   });
   let data = await response.json();
+  console.log(data);
   if (data[0] == "PATCH") {
     response = await fetch(`${apiURL}/cart/${user}/ADD/${id}`, {
       method: "PATCH",
     });
+    console.log(id);
+    let quantity = document.getElementById(`${id}-quantity`);
+    quantity.innerText = parseInt(quantity.innerText) + 1;
   } else {
+    let cardInfo = {
+      id: element.id,
+      quantity: 1,
+      price: element.children[3].innerText,
+      product_name: element.children[0].innerText,
+    };
+    generateCartCard(cardInfo);
     //card
   }
 }

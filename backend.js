@@ -83,7 +83,7 @@ app.patch("/cart/:customer/:add/:product", async (req, res, next) => {
     res.send(response.rows);
   } else {
     // add in handler in app.js for sending a delete when it recieves this
-    res.send(["DELETE", req.params.customer, req.params.product]);
+    res.status(303).send(["DELETE", req.params.customer, req.params.product]);
   }
 });
 
@@ -107,14 +107,14 @@ app.post("/newCart/:customer/:product", async (req, res) => {
     client
       .query(
         `INSERT INTO customer_product (user_id,product_id,quantity)
-    VALUES ($1,$2,1) RETURNING *`,
+    VALUES ($1,$2,1)`,
         [req.params.customer, req.params.product]
       )
       .then((result) => {
         res.send(result.rows);
       });
   } else {
-    res.send(["PATCH", req.params.customer, req.params.product]);
+    res.status(303).send(["PATCH", req.params.customer, req.params.product]);
   }
 });
 

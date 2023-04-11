@@ -8,15 +8,20 @@
     <link rel="stylesheet" href="/styles" />
     <title>agora</title>
   </head>
+  <div id="sign-in-container"></div>
   <body onload="pageLoad()">
     <div id="cart">
       <!-- <div id="cart-header" class="column">top left</div> -->
-      <header>topleft</header>
+      <header id="cart-panel">Cart</header>
       <div id="cart-body" class="main"></div>
     </div>
 
     <div id="card-display" class="column">
-      <header>top right</header>
+      <header id="user-panel">
+        Welcome, guest
+
+        <br /><button>sign in</button>
+      </header>
       <div id="card-display-body" class="main"></div>
     </div>
   </body>

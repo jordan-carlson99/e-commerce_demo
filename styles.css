@@ -4,18 +4,19 @@ body {
   display: flex;
 }
 header {
-  flex-shrink: 0;
+  flex-shrink: 1;
   display: flex;
   border: 1px solid green;
+  height: 15vh;
 }
 .column {
-  height: 100%; /* allows both columns to span the full height of the browser window */
+  height: 100%;
   display: flex;
-  flex-direction: column; /* stacks the left and right headers above the bottom content */
+  flex-direction: column;
 }
 .main {
   flex-grow: 1;
-  overflow-y: auto;
+  overflow-y: scroll;
   justify-content: space-around;
 }
 .card {
@@ -30,6 +31,7 @@ header {
   flex-shrink: 0;
   height: 100vh;
   flex-basis: 15vw;
+  overflow-y: scroll;
   border: 1px solid blue;
 }
 #card-display {
@@ -52,4 +54,11 @@ header {
   text-align: center;
   padding: 3%;
   border: 1px solid black;
+}
+#user-panel {
+  flex-direction: column;
+  align-items: flex-end;
+  padding-right: 8%;
+}
+#cart-panel {
 }
