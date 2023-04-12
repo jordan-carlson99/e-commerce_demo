@@ -9,6 +9,7 @@
     <title>agora</title>
   </head>
   <div id="sign-in-container" class="container hidden">
+    <button onclick="signInPopUp()">&times</button>
     <form id="sign-in-form">
       <h3>UserName:</h3>
       <input name="userName" type="text" /> <br />
@@ -19,17 +20,36 @@
   </div>
   <body onload="pageLoad()">
     <div id="cart">
-      <header id="cart-panel">Cart</header>
+      <header id="cart-panel">
+        <h4>Your Cart</h4>
+        <h4>Total</h4>
+        <h5 id="cart-total"></h5>
+      </header>
       <div id="cart-body" class="main"></div>
     </div>
 
     <div id="card-display" class="column">
       <header id="user-panel">
-        Welcome, guest
-
-        <br /><button onclick="signInPopUp()">sign in</button>
+        <h4>Welcome, guest</h4>
+        <button onclick="signInPopUp()">sign in</button>
       </header>
       <div id="card-display-body" class="main"></div>
     </div>
   </body>
 </html>
+
+<!-- <div id="cart-body" class="main">
+  <div class="cart-card" id="cart-2">
+    <div class="cart-card-title">
+      <h3>Wireless Headphones</h3>
+    </div>
+    <div class="cart-card-quantity">
+      <h4 id="2-quantity" class="cart-right">3</h4>
+      <h4 id="2-price"><br />46.47</h4>
+    </div>
+    <div class="cart-card-button">
+      <button class="cart-button">+</button>
+      <button class="cart-button">-</button>
+    </div>
+  </div>
+</div> -->

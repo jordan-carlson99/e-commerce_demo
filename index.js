@@ -11,21 +11,22 @@ function generateMainCard(item) {
   let card = document.createElement("div");
   card.className = "card";
   card.id = item.id;
-  let button = document.createElement("button");
+  let button = document.createElement("img");
   button.type = "button";
   button.className = "card-button";
-  button.innerText = "add to cart";
+  button.src = "/images/shopping_cart";
   button.addEventListener("click", (e) => {
-    console.log(e.target.parentNode);
     addToCart(e.target.parentNode);
-    // console.log(e.target.parentNode);
   });
   card.innerHTML = `
     <h2 class="card-title">${item.product_name}</h2><br>
-    <img src="" alt="" />picture
+    <img src="/images/${item.product_name.toUpperCase()}" alt="" />
     <h3 class="card-price">${item.price}</h3>`;
   card.appendChild(button);
   document.getElementById("card-display-body").appendChild(card);
+  document.querySelectorAll("br").forEach((element) => {
+    element.remove();
+  });
   return card;
 }
 
@@ -34,11 +35,20 @@ function generateCartCard(item) {
   card.className = "cart-card";
   card.id = `cart-${item.id}`;
   card.innerHTML = `
+  <div class="cart-card-title">
   <h3>${item.product_name}</h3>
-  <h4 id="${item.id}-quantity">${item.quantity}</h4>
-  <h4 id="${item.id}-price">${parseFloat(item.price) * item.quantity}</h4>`;
+  </div>
+  <div class="cart-card-quantity">
+  <h4 id="${item.id}-quantity" class="cart-right">${item.quantity}</h4>
+  <h4 id="${item.id}-price">${(parseFloat(item.price) * item.quantity).toFixed(
+    2
+  )}</h4>
+  </div>`;
+  let buttonDiv = document.createElement("div");
+  buttonDiv.className = "cart-card-button";
   let quantityUp = document.createElement("button");
   quantityUp.innerText = "+";
+  quantityUp.className = "cart-button";
   quantityUp.addEventListener("click", async (e) => {
     let cardID = item.id;
     let response = await fetch(
@@ -60,9 +70,7 @@ function generateCartCard(item) {
         ) * data[0].quantity
       ).toFixed(2)}`;
     } else {
-      console.log("redirect");
       let redirect = await response.json();
-      console.log(redirect);
       fetch(`${apiURL}/cart/remove/${redirect[1]}/${redirect[2]}`, {
         method: redirect[0],
       });
@@ -70,9 +78,13 @@ function generateCartCard(item) {
         document.getElementById(`${redirect[2]}`)
       );
     }
+    document.querySelectorAll("br").forEach((element) => {
+      element.remove();
+    });
   });
   let quantityDown = document.createElement("button");
   quantityDown.innerText = "-";
+  quantityDown.className = "cart-button";
   quantityDown.addEventListener("click", async (e) => {
     let cardID = item.id;
     let response = await fetch(
@@ -94,19 +106,21 @@ function generateCartCard(item) {
           ) * data[0].quantity
         ).toFixed(2)}`;
     } else {
-      console.log("redirect");
       let redirect = await response.json();
-      console.log(redirect);
       fetch(`${apiURL}/cart/remove/${redirect[1]}/${redirect[2]}`, {
         method: redirect[0],
       });
-      e.target.parentNode.parentNode.removeChild(
+      e.target.parentNode.parentNode.parentNode.removeChild(
         document.getElementById(`cart-${redirect[2]}`)
       );
     }
+    document.querySelectorAll("br").forEach((element) => {
+      element.remove();
+    });
   });
-  card.appendChild(quantityUp);
-  card.appendChild(quantityDown);
+  buttonDiv.appendChild(quantityDown);
+  buttonDiv.appendChild(quantityUp);
+  card.appendChild(buttonDiv);
   document.getElementById("cart-body").appendChild(card);
 }
 
@@ -148,23 +162,20 @@ async function addToCart(element) {
     method: "POST",
   });
   let data = await response.json();
-  console.log(data);
   if (data[0] == "PATCH") {
     response = await fetch(`${apiURL}/cart/${user}/ADD/${id}`, {
       method: "PATCH",
     });
-    console.log(id);
     let quantity = document.getElementById(`${id}-quantity`);
     quantity.innerText = parseInt(quantity.innerText) + 1;
   } else {
     let cardInfo = {
       id: element.id,
       quantity: 1,
-      price: element.children[3].innerText,
+      price: element.children[2].innerText,
       product_name: element.children[0].innerText,
     };
     generateCartCard(cardInfo);
-    //card
   }
 }
 async function submitSignIn() {
@@ -172,7 +183,7 @@ async function submitSignIn() {
   let response = await fetch(
     `${apiURL}/login?userName=${formData.get(
       "userName"
-    )}&password=${formData.get("password")}`
+    )}&password=${window.btoa(formData.get("password"))}`
   );
   if (response.ok) {
     let data = await response.json();

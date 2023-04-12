@@ -23,6 +23,9 @@ app.get("/styles", (req, res) => {
   res.sendFile(`${pathToFile}/styles.css`);
 });
 
+app.get("/images/:image", (req, res) => {
+  res.sendFile(`${pathToFile}/images/${req.params.image}.jpg`);
+});
 // app.get("/login", (req, res, next) => {
 //   console.log(req.query);
 //   next();
