@@ -8,8 +8,8 @@ import cors from "cors";
 const connectionString =
   process.env.connectionString ||
   "postgres://username:password@host:port/database";
-// const port = process.env.backPort || "127.0.0.1";
-// const url = process.env.backURL || 3500;
+const port = process.env.backPort || "127.0.0.1";
+const url = process.env.backURL || 3500;
 const client = new Client(connectionString);
 
 client.connect();
@@ -137,4 +137,6 @@ app.get("/login", async (req, res) => {
   // res.redirect(`http://${process.env.frontURL}:${process.env.frontPort}/`);
 });
 
-app.listen(3000);
+app.listen(port, url, () => {
+  console.log(`api running on ${url}:${port}`);
+});

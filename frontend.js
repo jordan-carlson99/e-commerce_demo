@@ -6,8 +6,8 @@ import cors from "cors";
 
 let pathToFile = path.resolve("./");
 dotenv.config();
-// const port = process.env.frontPort || 3000;
-// const url = process.env.frontURL || "127.0.0.1";
+const port = process.env.frontPort || 3000;
+const url = process.env.frontURL || "127.0.0.1";
 
 app.use(cors());
 
@@ -40,4 +40,6 @@ app.get("/images/:image", (req, res) => {
 //   res.sendFile(`${pathToFile}/index.html`);
 // });
 
-app.listen(3000);
+app.listen(port, url, () => {
+  console.log(`front end ruinning on ${url}:${port}`);
+});
