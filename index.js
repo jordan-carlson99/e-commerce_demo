@@ -1,5 +1,5 @@
 // change this to env variables when modules aren't maddening
-const apiURL = `http://127.0.0.15:3500`;
+const apiURL = `https://e-commerce-api-qsvg.onrender.com`;
 let pageUser = localStorage.getItem("pageUser") || {
   userName: "guest",
   full_name: "guest",
