@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon frontend.js & nodemon backend.js"
+    "dev": "nodemon frontend.js & nodemon backend.js",
+    "api": "node backend.js",
+    "staticSite": "node frontend.js"
   },
   "author": "",
   "license": "ISC",
