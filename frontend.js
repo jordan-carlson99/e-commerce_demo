@@ -11,6 +11,11 @@ dotenv.config();
 
 app.use(cors());
 
+app.use((req, res, next) => {
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  next();
+});
+
 app.get("/", (req, res) => {
   res.sendFile(`${pathToFile}/index.html`);
 });
